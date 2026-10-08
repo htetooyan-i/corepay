@@ -6,6 +6,7 @@ public class UpdateUserRequest {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String currentPassword;
 
     public UpdateUserRequest() {};
 
@@ -23,5 +24,9 @@ public class UpdateUserRequest {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 }

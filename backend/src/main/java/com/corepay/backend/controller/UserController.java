@@ -2,6 +2,8 @@ package com.corepay.backend.controller;
 
 import com.corepay.backend.dto.*;
 import com.corepay.backend.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +39,16 @@ public class UserController {
         return userService.findUserById(id);
     }
 
+    @GetMapping("/me")
+    UserResponse me() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        UUID userId = UUID.fromString(authentication.getName());
+
+        return userService.findUserById(userId);
+    }
+
     @GetMapping(params = "email")
     UserResponse searchByEmail(@RequestParam String email) {
         return userService.findUserByEmail(email);
@@ -62,8 +74,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    String deleteById(@PathVariable UUID id) {
-        userService.deleteUser(id);
+    String deleteById(@PathVariable UUID id, @RequestBody DeleteUserRequest request) {
+        userService.deleteUser(id, request);
 
         return "User deleted successfully";
     }

@@ -87,6 +87,10 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (request.getCurrentPassword() == null || !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new InvalidCredentialException("Current password is incorrect");
+        }
+
         if (request.getFirstName() != null) {
             user.setFirstName(request.getFirstName());
         }
@@ -112,15 +116,22 @@ public class UserService {
 
         boolean isPasswordCorrect = passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash());
 
-        if (isPasswordCorrect) {
-            user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
-            userRepository.save(user);
+        if (!isPasswordCorrect) {
+            throw new InvalidCredentialException("Current password is incorrect");
         }
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
-    public void deleteUser(UUID id) {
+    public void deleteUser(UUID id, DeleteUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (request.getCurrentPassword() == null
+                || !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new InvalidCredentialException("Current password is incorrect");
+        }
 
         userRepository.delete(user);
     }
