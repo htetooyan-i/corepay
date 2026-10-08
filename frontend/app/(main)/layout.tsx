@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import DashboardHeader from "./dashboardHeader";
 
 const navigation = [
   { href: "/dashboard", label: "Overview" },
@@ -10,6 +11,7 @@ const navigation = [
 ];
 
 export default function MainLayout({ children }: { children: ReactNode }) {
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
       <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-slate-200 bg-white p-6 md:block">
@@ -29,13 +31,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         </nav>
       </aside>
       <div className="md:pl-64">
-        <header className="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-6 md:px-10">
-          <div>
-            <p className="text-sm text-slate-500">Personal banking</p>
-            <p className="font-semibold">Good morning, Alex</p>
-          </div>
-          <Link href="/auth/login" className="text-sm font-semibold text-slate-600 hover:text-slate-950">Sign out</Link>
-        </header>
+        <DashboardHeader />
         <main className="p-6 md:p-10">{children}</main>
       </div>
     </div>

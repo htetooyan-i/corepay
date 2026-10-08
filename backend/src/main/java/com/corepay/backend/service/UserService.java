@@ -39,7 +39,7 @@ public class UserService {
         return jwtService.generateToken(user);
     }
 
-    public void createUser(CreateUserRequest request) {
+    public String createUser(CreateUserRequest request) {
 
         Optional<User> existingUser = userRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber());
 
@@ -49,6 +49,8 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPhoneNumber(), hashedPassword);
         userRepository.save(user);
+
+        return jwtService.generateToken(user);
     }
 
     public List<UserResponse> findAllUsers() {
