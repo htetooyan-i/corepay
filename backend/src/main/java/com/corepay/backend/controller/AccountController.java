@@ -5,6 +5,7 @@ import com.corepay.backend.dto.CreateAccountRequest;
 import com.corepay.backend.dto.UpdateAccountStatusRequest;
 import com.corepay.backend.service.AccountService;
 import org.jspecify.annotations.NonNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -46,13 +47,15 @@ public class AccountController {
     }
 
     @GetMapping("/me")
-    public AccountResponse getMyAccount() {
+    public ResponseEntity<AccountResponse> getMyAccount() {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
         UUID userId = UUID.fromString(authentication.getName());
 
-        return accountService.findByUserId(userId);
+        AccountResponse acc = accountService.findByUserId(userId);
+
+        return ResponseEntity.ok(acc);
     }
 
     @PatchMapping("/{id}")

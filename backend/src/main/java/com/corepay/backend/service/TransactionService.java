@@ -9,9 +9,14 @@ import com.corepay.backend.model.TransactionStatus;
 import com.corepay.backend.repository.AccountRepository;
 import com.corepay.backend.repository.TransactionRepository;
 import com.corepay.backend.exception.AccountNotFoundException;
+import com.corepay.backend.exception.InvalidCredentialException;
+import com.corepay.backend.exception.UserNotFoundException;
+import com.corepay.backend.model.User;
+import com.corepay.backend.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,17 +28,33 @@ import java.util.UUID;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${paycore.system-account-id}")
     private UUID systemAccountId;
 
-    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository) {
+    public TransactionService(
+            TransactionRepository transactionRepository,
+            AccountRepository accountRepository,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
-    public void createTransaction(CreateTransactionRequest request) {
+    public void createTransaction(CreateTransactionRequest request, UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        if (request.getCurrentPassword() == null
+                || !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new InvalidCredentialException("Current password is incorrect");
+        }
 
         Optional<Account> senderAccount =
                 request.getSenderId() != null

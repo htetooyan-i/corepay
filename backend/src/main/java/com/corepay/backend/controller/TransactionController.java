@@ -1,10 +1,10 @@
 package com.corepay.backend.controller;
 
-import com.corepay.backend.dto.CreateAccountRequest;
 import com.corepay.backend.dto.CreateTransactionRequest;
 import com.corepay.backend.dto.TransactionResponse;
-import com.corepay.backend.model.Transaction;
 import com.corepay.backend.service.TransactionService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +22,9 @@ public class TransactionController {
 
     @PostMapping
     public String createTransaction(@RequestBody CreateTransactionRequest request) {
-        transactionService.createTransaction(request);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID userId = UUID.fromString(authentication.getName());
+        transactionService.createTransaction(request, userId);
         return String.format("Transaction created successfully");
     }
 

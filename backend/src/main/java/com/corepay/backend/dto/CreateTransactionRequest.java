@@ -11,6 +11,7 @@ public class CreateTransactionRequest {
     private UUID receiverId;
     private BigDecimal amount;
     private TransactionType transactionType;
+    private String currentPassword;
 
     public CreateTransactionRequest() {}
 
@@ -35,5 +36,9 @@ public class CreateTransactionRequest {
 
     public TransactionType getTransactionType() {
         return transactionType;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 }

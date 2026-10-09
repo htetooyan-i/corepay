@@ -8,7 +8,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="md:pl-64">
         <DashboardHeader />
-        <main className="p-6 md:p-10">{children}</main>
+        <main className="p-6 pt-28 md:p-10 md:pt-30">{children}</main>
       </div>
     </div>
   );

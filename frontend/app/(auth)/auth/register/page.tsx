@@ -4,7 +4,7 @@ import RegisterForm from "./registerForm";
 
 export default function RegisterPage() {
   return (
-    <section className="rounded-3xl bg-white p-8 text-slate-950 shadow-2xl shadow-black/20">
+    <section className="mx-auto w-full max-w-md rounded-3xl bg-white p-8 text-slate-950 shadow-2xl shadow-black/20">
       <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-700">
         Get started
       </p>

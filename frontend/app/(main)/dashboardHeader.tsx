@@ -30,7 +30,7 @@ export default function DashboardHeader() {
     };
 
     return (
-        <header className="flex h-20 items-center justify-between border-b border-slate-200 bg-white px-6 md:px-10">
+        <header className="fixed inset-x-0 top-0 z-30 flex h-20 items-center justify-between border-b border-slate-200 bg-white px-6 shadow-sm md:left-64 md:px-10">
           <div>
             <p className="text-sm text-slate-500">Personal banking</p>
             <p className="font-semibold">Good morning, {user?.firstName || ":)"}</p>
